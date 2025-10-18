@@ -1,0 +1,65 @@
+{
+    "name": "AlgorithmRun",
+    "type": "object",
+    "properties": {
+        "project_id": {
+            "type": "string",
+            "description": "Reference to QuantumProject"
+        },
+        "execution_time": {
+            "type": "number",
+            "description": "Execution time in seconds"
+        },
+        "qubits_used": {
+            "type": "integer",
+            "description": "Number of qubits used"
+        },
+        "circuit_depth": {
+            "type": "integer",
+            "description": "Quantum circuit depth"
+        },
+        "fidelity": {
+            "type": "number",
+            "description": "Algorithm fidelity score (0-1)"
+        },
+        "processor_used": {
+            "type": "string",
+            "description": "Quantum processor used"
+        },
+        "results": {
+            "type": "object",
+            "description": "Execution results data",
+            "properties": {
+                "output_state": {
+                    "type": "string"
+                },
+                "measurements": {
+                    "type": "array",
+                    "items": {
+                        "type": "object"
+                    }
+                },
+                "error_rate": {
+                    "type": "number"
+                }
+            }
+        },
+        "generated_code": {
+            "type": "string",
+            "description": "Generated quantum code"
+        },
+        "status": {
+            "type": "string",
+            "enum": [
+                "success",
+                "failed",
+                "timeout"
+            ],
+            "description": "Run status"
+        }
+    },
+    "required": [
+        "project_id",
+        "processor_used"
+    ]
+}

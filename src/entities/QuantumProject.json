@@ -1,0 +1,73 @@
+{
+    "name": "QuantumProject",
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string",
+            "description": "Project name"
+        },
+        "scenario": {
+            "type": "string",
+            "enum": [
+                "finance",
+                "pharma",
+                "education",
+                "materials",
+                "cryptography"
+            ],
+            "description": "Application scenario"
+        },
+        "algorithm": {
+            "type": "string",
+            "description": "Selected quantum algorithm"
+        },
+        "algorithm_type": {
+            "type": "string",
+            "enum": [
+                "QAOA",
+                "VQE",
+                "Grover",
+                "Shor",
+                "QFT"
+            ],
+            "description": "Base algorithm type"
+        },
+        "canvas_data": {
+            "type": "object",
+            "description": "Canvas configuration and components",
+            "properties": {
+                "components": {
+                    "type": "array",
+                    "items": {
+                        "type": "object"
+                    }
+                },
+                "connections": {
+                    "type": "array",
+                    "items": {
+                        "type": "object"
+                    }
+                }
+            }
+        },
+        "processor_recommendation": {
+            "type": "string",
+            "description": "Recommended quantum processor"
+        },
+        "status": {
+            "type": "string",
+            "enum": [
+                "draft",
+                "validated",
+                "running",
+                "completed"
+            ],
+            "default": "draft",
+            "description": "Project status"
+        }
+    },
+    "required": [
+        "name",
+        "scenario"
+    ]
+}
