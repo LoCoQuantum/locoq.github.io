@@ -45,14 +45,68 @@ export default function DesignCanvasClient() {
         );
     };
 
-    const handleSave = () => {
+    const handleNodeConfigChange = (nodeId, selectedOption) => {
+        setNodes((currentNodes) =>
+            currentNodes.map((node) =>
+                node.id === nodeId ? { ...node, selectedOption } : node
+            )
+        );
+    };
+
+    const handleDeleteNode = (nodeId) => {
+        setNodes((currentNodes) => currentNodes.filter((node) => node.id !== nodeId));
+        setConnections((currentConnections) =>
+            currentConnections.filter(
+                (conn) => conn.from.nodeId !== nodeId && conn.to.nodeId !== nodeId
+            )
+        );
+    };
+
+    const saveProject = (status) => {
+        try {
+            const projects = JSON.parse(localStorage.getItem("quantumProjects") || "[]");
+            const existingProjectIndex = projects.findIndex(p => p.name === projectName);
+
+            let project = {
+                name: projectName,
+                scenario: scenario,
+                algorithmType: algorithmType,
+                nodes: nodes,
+                connections: connections,
+                modifiedAt: new Date().toISOString(),
+                status: status,
+            };
+
+            if (existingProjectIndex !== -1) {
+                project.id = projects[existingProjectIndex].id;
+                project.createdAt = projects[existingProjectIndex].createdAt;
+                projects[existingProjectIndex] = { ...projects[existingProjectIndex], ...project };
+            } else {
+                project.id = `proj-${Date.now()}`;
+                project.createdAt = new Date().toISOString();
+                projects.push(project);
+            }
+
+            localStorage.setItem("quantumProjects", JSON.stringify(projects));
+            console.log("Project saved with status:", status);
+            return project.id;
+        } catch (error) {
+            console.error("Failed to save project:", error);
+            return null;
+        }
+    };
+
+    const handleSaveClick = () => {
         setIsSaving(true);
-        console.log("Saving project:", { projectName, nodes, connections });
-        setTimeout(() => setIsSaving(false), 1500);
+        saveProject('saved');
+        setTimeout(() => setIsSaving(false), 1000);
     };
 
     const handleRun = () => {
-        router.push(`/execution?project=${projectName}`);
+        const projectId = saveProject('draft');
+        if (projectId) {
+            router.push(`/execution?qpu=${selectedQPU}&project=${projectName}&projectId=${projectId}`);
+        }
     };
 
     return (
@@ -75,7 +129,7 @@ export default function DesignCanvasClient() {
                 </div>
                 <div className="flex items-center gap-3">
                     <Button
-                        onClick={handleSave}
+                        onClick={handleSaveClick}
                         disabled={isSaving}
                         className="glass text-white"
                     >
@@ -97,9 +151,11 @@ export default function DesignCanvasClient() {
                     <CanvasArea
                         nodes={nodes}
                         connections={connections}
-                        addNode={addNode}
-                        updateNodePosition={updateNodePosition}
                         setConnections={setConnections}
+                        onDrop={addNode}
+                        onNodeMove={updateNodePosition}
+                        onNodeConfigChange={handleNodeConfigChange}
+                        onDeleteNode={handleDeleteNode}
                     />
                 </div>
 
@@ -109,6 +165,7 @@ export default function DesignCanvasClient() {
                         selectedQPU={selectedQPU}
                         setSelectedQPU={setSelectedQPU}
                         onRun={handleRun}
+                        projectName={projectName}
                     />
                 </div>
             </div>

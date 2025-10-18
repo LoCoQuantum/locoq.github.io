@@ -11,12 +11,7 @@ const qpus = [
     { id: 'quantinuum_h1', name: 'Quantinuum H1', qubits: 20, fidelity: '99.9%', rank: 5, available: false },
 ];
 
-export default function ValidationPanel({ selectedQPU, setSelectedQPU }) {
-
-    const navigateToExecution = () => {
-        // In a real app, this would pass more context
-        window.location.href = `/pages/Execution?qpu=${selectedQPU}`;
-    }
+export default function ValidationPanel({ selectedQPU, setSelectedQPU, onRun }) {
 
     return (
         <div className="h-full glass-card rounded-2xl p-4 flex flex-col">
@@ -61,7 +56,7 @@ export default function ValidationPanel({ selectedQPU, setSelectedQPU }) {
                     </Select>
                 </div>
 
-                <Button onClick={navigateToExecution} className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white">
+                <Button onClick={onRun} className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white">
                     <Play className="w-4 h-4 mr-2" />
                     Run on QPU
                 </Button>

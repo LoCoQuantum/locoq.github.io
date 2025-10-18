@@ -9,6 +9,7 @@ export default function ExecutionClient() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const projectName = searchParams.get("project");
+    const projectId = searchParams.get("projectId");
 
     const [progress, setProgress] = useState(0);
     const [completed, setCompleted] = useState(false);
@@ -26,6 +27,23 @@ export default function ExecutionClient() {
         }, 100);
         return () => clearInterval(interval);
     }, []);
+
+    useEffect(() => {
+        if (completed && projectId) {
+            try {
+                const projects = JSON.parse(localStorage.getItem("quantumProjects") || "[]");
+                const projectIndex = projects.findIndex(p => p.id === projectId);
+                if (projectIndex !== -1) {
+                    projects[projectIndex].status = 'completed';
+                    projects[projectIndex].completedAt = new Date().toISOString();
+                    localStorage.setItem("quantumProjects", JSON.stringify(projects));
+                    console.log(`Project ${projectId} status updated to completed.`);
+                }
+            } catch (error) {
+                console.error("Failed to update project status:", error);
+            }
+        }
+    }, [completed, projectId]);
 
     return (
         <div className="min-h-screen p-8">
