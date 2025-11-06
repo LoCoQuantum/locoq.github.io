@@ -35,7 +35,7 @@ export default function ValidationPanel({ selectedQPU, setSelectedQPU, onRun }) 
             <div className="space-y-3 mt-auto">
                 <Button className="w-full glass text-white hover:bg-white/10">
                     <ShieldCheck className="w-4 h-4 mr-2" />
-                    Validate Circuit
+                    Validate Circuit (Digital Twin)
                 </Button>
 
                 <div className="space-y-2">
