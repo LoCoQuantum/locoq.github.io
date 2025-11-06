@@ -17,11 +17,11 @@ export const toolboxItems = [
         options: ['Hardware Efficient', 'UCCSD', 'RY-RZ', 'Custom'],
     },
     {
-        type: 'gates',
-        name: 'Quantum Gates',
+        type: 'circuits',
+        name: 'Quantum Circuits',
         icon: GitBranch,
         color: 'from-purple-400 to-pink-500',
-        options: ['Hadamard', 'CNOT', 'Toffoli', 'RY', 'RZ'],
+        options: ['VQC', 'QAOA'],
     },
     {
         type: 'optimizer',

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Play, ShieldCheck, Cpu } from 'lucide-react';
+import { Play, ShieldCheck, Cpu, Sparkles } from 'lucide-react';
 
 const qpus = [
     { id: 'ibm_eagle', name: 'IBM Eagle', qubits: 127, fidelity: '99.5%', rank: 1, available: true },
@@ -56,10 +56,16 @@ export default function ValidationPanel({ selectedQPU, setSelectedQPU, onRun }) 
                     </Select>
                 </div>
 
-                <Button onClick={onRun} className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white">
-                    <Play className="w-4 h-4 mr-2" />
-                    Run on QPU
-                </Button>
+                <div className="flex items-center gap-2">
+                    <Button className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white">
+                        <Sparkles className="w-4 h-4 mr-2" />
+                        Optimize by AI
+                    </Button>
+                    <Button onClick={onRun} className="flex-1 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white">
+                        <Play className="w-4 h-4 mr-2" />
+                        Run on QPU
+                    </Button>
+                </div>
             </div>
         </div>
     );

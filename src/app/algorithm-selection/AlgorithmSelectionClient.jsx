@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowLeft, Cpu, Network, Binary } from "lucide-react";
+import { ArrowLeft, Cpu, Network, Binary, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -79,7 +79,13 @@ export default function AlgorithmSelectionClient() {
                     ))}
                 </div>
 
-                <div className="flex justify-center">
+                <div className="flex justify-center gap-4">
+                    <Button
+                        className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-12 py-6 text-lg rounded-xl"
+                    >
+                        <Sparkles className="w-5 h-5 mr-2" />
+                        Ask AI for suggestions
+                    </Button>
                     <Button
                         onClick={() => selectedAlgorithm && projectName && router.push(`/design-canvas?scenario=${scenario}&algorithm=${selectedAlgorithm.id}&type=${selectedAlgorithm.type}&name=${projectName}`)}
                         disabled={!selectedAlgorithm || !projectName}
