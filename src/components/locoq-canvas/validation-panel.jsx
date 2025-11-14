@@ -2,6 +2,8 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Play, ShieldCheck, Cpu, Sparkles } from 'lucide-react';
+import { useUserRole } from '@/app/layout';
+
 
 const qpus = [
     { id: 'ibm_eagle', name: 'IBM Eagle', qubits: 127, fidelity: '99.5%', rank: 1, available: true },
@@ -12,6 +14,7 @@ const qpus = [
 ];
 
 export default function ValidationPanel({ selectedQPU, setSelectedQPU, onRun }) {
+    const { userRole } = useUserRole();
 
     return (
         <div className="h-full glass-card rounded-2xl p-4 flex flex-col">
@@ -33,10 +36,20 @@ export default function ValidationPanel({ selectedQPU, setSelectedQPU, onRun }) 
             </div>
 
             <div className="space-y-3 mt-auto">
-                <Button className="w-full glass text-white hover:bg-white/10">
-                    <ShieldCheck className="w-4 h-4 mr-2" />
-                    Validate Circuit (Digital Twin)
-                </Button>
+                {userRole === 'Ultra' && (
+                    <>
+                        <Button className="w-full glass text-white hover:bg-white/10">
+                            <ShieldCheck className="w-4 h-4 mr-2" />
+                            Validate Circuit (Digital Twin)
+                        </Button>
+                        <div className="flex items-center gap-2">
+                            <Button className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white">
+                                <Sparkles className="w-4 h-4 mr-2" />
+                                Optimize by AI
+                            </Button>
+                        </div>
+                    </>
+                )}
 
                 <div className="space-y-2">
                     <label className="text-white/70 text-sm px-2">Select QPU to run on:</label>
@@ -56,16 +69,10 @@ export default function ValidationPanel({ selectedQPU, setSelectedQPU, onRun }) 
                     </Select>
                 </div>
 
-                <div className="flex items-center gap-2">
-                    <Button className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white">
-                        <Sparkles className="w-4 h-4 mr-2" />
-                        Optimize by AI
-                    </Button>
-                    <Button onClick={onRun} className="flex-1 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white">
-                        <Play className="w-4 h-4 mr-2" />
-                        Run on QPU
-                    </Button>
-                </div>
+                <Button onClick={onRun} className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white">
+                    <Play className="w-4 h-4 mr-2" />
+                    Run on QPU
+                </Button>
             </div>
         </div>
     );

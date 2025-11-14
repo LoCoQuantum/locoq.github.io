@@ -35,6 +35,13 @@ export default function AlgorithmSelectionClient() {
             name: "Grover's Search",
             description: "Quantum search algorithm",
             icon: Binary
+        },
+        {
+            id: "askai",
+            type: "ASKAI",
+            name: "Ask AI for help",
+            description: "Suggest the best algorithm for your application",
+            icon: Sparkles
         }
     ];
 
@@ -81,17 +88,11 @@ export default function AlgorithmSelectionClient() {
 
                 <div className="flex justify-center gap-4">
                     <Button
-                        className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-12 py-6 text-lg rounded-xl"
-                    >
-                        <Sparkles className="w-5 h-5 mr-2" />
-                        Ask AI for suggestions
-                    </Button>
-                    <Button
                         onClick={() => selectedAlgorithm && projectName && router.push(`/design-canvas?scenario=${scenario}&algorithm=${selectedAlgorithm.id}&type=${selectedAlgorithm.type}&name=${projectName}`)}
                         disabled={!selectedAlgorithm || !projectName}
                         className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white px-12 py-6 text-lg rounded-xl disabled:opacity-50"
                     >
-                        Design Algorithm
+                        Go to Design Canvas
                     </Button>
                 </div>
             </div>

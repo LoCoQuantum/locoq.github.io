@@ -126,61 +126,64 @@ export default function CanvasArea({ nodes, connections, setConnections, onDrop,
     const canvasRef = useRef(null);
 
     return (
-        <div
-            ref={canvasRef}
-            onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
-            onDragLeave={() => setDragOver(false)}
-            onDrop={(e) => {
-                e.preventDefault();
-                setDragOver(false);
-                const itemType = e.dataTransfer.getData('application/reactflow');
-                onDrop(itemType, { x: e.clientX, y: e.clientY });
-            }}
-            onClick={(e) => { if (e.target === e.currentTarget) setConnecting(null); }}
-            className={`relative h-full glass-card rounded-2xl p-4 overflow-hidden ${dragOver ? 'ring-2 ring-cyan-400' : ''}`}
-        >
-            <div className="absolute inset-0 opacity-20" style={{
-                backgroundImage: `linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
-                            linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)`,
-                backgroundSize: '30px 30px'
-            }} />
+        <div className="h-full glass-card rounded-2xl p-4 flex flex-col">
+            <h2 className="text-white font-bold text-lg mb-4 px-2">Design Canvas</h2>
+            <div
+                ref={canvasRef}
+                onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+                onDragLeave={() => setDragOver(false)}
+                onDrop={(e) => {
+                    e.preventDefault();
+                    setDragOver(false);
+                    const itemType = e.dataTransfer.getData('application/reactflow');
+                    onDrop(itemType, { x: e.clientX, y: e.clientY });
+                }}
+                onClick={(e) => { if (e.target === e.currentTarget) setConnecting(null); }}
+                className={`relative h-full rounded-2xl p-4 overflow-hidden ${dragOver ? 'ring-2 ring-cyan-400' : ''}`}
+            >
+                <div className="absolute inset-0 opacity-20" style={{
+                    backgroundImage: `linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+                                linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)`,
+                    backgroundSize: '30px 30px'
+                }} />
 
-            {nodes.map(node => (
-                <Node
-                    key={node.id}
-                    node={node}
-                    onNodeMove={onNodeMove}
-                    onNodeConfigChange={onNodeConfigChange}
-                    onDeleteNode={onDeleteNode}
-                    onAnchorClick={handleAnchorClick}
-                    isConnecting={!!connecting}
-                />
-            ))}
+                {nodes.map(node => (
+                    <Node
+                        key={node.id}
+                        node={node}
+                        onNodeMove={onNodeMove}
+                        onNodeConfigChange={onNodeConfigChange}
+                        onDeleteNode={onDeleteNode}
+                        onAnchorClick={handleAnchorClick}
+                        isConnecting={!!connecting}
+                    />
+                ))}
 
-            <svg className="absolute top-0 left-0 w-full h-full pointer-events-none">
-                {connections.map((conn, i) => {
-                    const p1 = getAnchorPos(conn.from.nodeId, 'output');
-                    const p2 = getAnchorPos(conn.to.nodeId, 'input');
-                    const path = `M ${p1.x} ${p1.y} C ${p1.x + 50} ${p1.y} ${p2.x - 50} ${p2.y} ${p2.x} ${p2.y}`;
-                    return <path key={i} d={path} stroke="#67e8f9" strokeWidth="2" fill="none" />;
-                })}
-                {connecting && canvasRef.current && (() => {
-                    const canvasBounds = canvasRef.current.getBoundingClientRect();
-                    const p1 = getAnchorPos(connecting.nodeId, connecting.anchorType);
-                    const p2 = { x: mousePos.x - canvasBounds.left, y: mousePos.y - canvasBounds.top };
-                    const path = connecting.anchorType === 'output'
-                        ? `M ${p1.x} ${p1.y} C ${p1.x + 50} ${p1.y} ${p2.x - 50} ${p2.y} ${p2.x} ${p2.y}`
-                        : `M ${p2.x} ${p2.y} C ${p2.x + 50} ${p2.y} ${p1.x - 50} ${p1.y} ${p1.x} ${p1.y}`;
-                    return <path d={path} stroke="#facc15" strokeWidth="2" strokeDasharray="5,5" fill="none" />;
-                })()}
-            </svg>
+                <svg className="absolute top-0 left-0 w-full h-full pointer-events-none">
+                    {connections.map((conn, i) => {
+                        const p1 = getAnchorPos(conn.from.nodeId, 'output');
+                        const p2 = getAnchorPos(conn.to.nodeId, 'input');
+                        const path = `M ${p1.x} ${p1.y} C ${p1.x + 50} ${p1.y} ${p2.x - 50} ${p2.y} ${p2.x} ${p2.y}`;
+                        return <path key={i} d={path} stroke="#67e8f9" strokeWidth="2" fill="none" />;
+                    })}
+                    {connecting && canvasRef.current && (() => {
+                        const canvasBounds = canvasRef.current.getBoundingClientRect();
+                        const p1 = getAnchorPos(connecting.nodeId, connecting.anchorType);
+                        const p2 = { x: mousePos.x - canvasBounds.left, y: mousePos.y - canvasBounds.top };
+                        const path = connecting.anchorType === 'output'
+                            ? `M ${p1.x} ${p1.y} C ${p1.x + 50} ${p1.y} ${p2.x - 50} ${p2.y} ${p2.x} ${p2.y}`
+                            : `M ${p2.x} ${p2.y} C ${p2.x + 50} ${p2.y} ${p1.x - 50} ${p1.y} ${p1.x} ${p1.y}`;
+                        return <path d={path} stroke="#facc15" strokeWidth="2" strokeDasharray="5,5" fill="none" />;
+                    })()}
+                </svg>
 
-            {nodes.length === 0 && !dragOver && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                    <GitBranch className="w-16 h-16 text-white/10 mb-4" />
-                    <p className="text-white/40 text-lg">Drag components to the canvas to build your workflow</p>
-                </div>
-            )}
+                {nodes.length === 0 && !dragOver && (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                        <GitBranch className="w-16 h-16 text-white/10 mb-4" />
+                        <p className="text-white/40 text-lg">Drag components to the canvas to build your workflow</p>
+                    </div>
+                )}
+            </div>
         </div>
     );
 }
